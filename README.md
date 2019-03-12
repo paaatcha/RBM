@@ -9,5 +9,4 @@ If you find any bug or have any comment, feel free to email me.
 * Python 2.7.x
 * NumPy
 * Scikit-learn
-* RBM (check my repository)
-* Utils (check my repository)
+* Utils (check my [utils](https://github.com/paaatcha/utils) repository)
