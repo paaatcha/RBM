@@ -20,11 +20,13 @@ import numpy as np
 import tensorflow as tf
 import sys
 
-# Insert the util's path
-sys.path.insert (0, '/home/patcha/Dropbox/Doutorado/Codigos/Python/utils/')
+# Function to compute the sigmoid
+def sigmoid (v):
+    return 1/(1+np.exp(-v))
 
-
-from utilsClassification import sigmoid, rmse
+# Function to compute the mean square error    
+def mse (x,y):
+    return np.power((x-y),2).mean(axis=1).mean()
 
 class RBM_TF:
     # Atributes
@@ -78,25 +80,23 @@ class RBM_TF:
     def __del__(self):
         self.sess.close()
         tf.reset_default_graph()
-         
-        
-    # This method is called when we'd like to train the RBM. If you alredy have the weights,
-    # you just need to pass them as a parameter on the constructor method
-    # Parameters:
-    # maxIter:   # The iteration's max number. Default = 500
     
-    # lr:        # learning rate. Default = 0.001 
-    # wc:        # Weight cost. Default = 0.0002
-    # iMom:      # Initial momentum. Default = 0.5
-    # fMom:      # Final momentum. Default = 0.9
-    # cdIter:    # The CD iterations' number. Default = 1
-    # batchSize: # The mini-batche's size. Default= 100. If it's equal zero, then 
-    #              we use the whole dataset without batches       
-    # Verbose:   # If you'd like to print the training error, set True. Default = False
-    # freqPrint: # This var control the print frequence. Every freqPrint iteration, the
-                 # error will be printed. Default: 10
-    # tol        # The convergence tolerance error for the weights. Default: 10e-5
     def train (self, maxIter=200, lr=0.001, wc=0.0002, iMom=0.5, fMom=0.9, cdIter=1, batchSize=100, verbose=True, freqPrint=10, tol=10e-5):
+        '''
+        This method is called when we'd like to train the RBM. If you alredy have the weights,
+        you just need to pass them as a parameter on the constructor method
+        Input:
+            maxIter: The iteration's max number. Default = 500    
+            lr: learning rate. Default = 0.001 
+            wc: Weight cost. Default = 0.0002
+            iMom: Initial momentum. Default = 0.5
+            fMom: Final momentum. Default = 0.9
+            cdIter: The CD iterations' number. Default = 1
+            batchSize: The mini-batche's size. Default= 100. If it's equal zero, then we use the whole dataset without batches       
+            Verbose: If you'd like to print the training error, set True. Default = False
+            freqPrint: This var control the print frequence. Every freqPrint iteration, the error will be printed. Default: 10
+            tol: The convergence tolerance error for the weights. Default: 10e-5	
+        '''
         print 'Starting the training...'
         # Checkin the batch size. If it's 0, we use the whole dataset        
         if batchSize == 0:
@@ -200,9 +200,9 @@ class RBM_TF:
          
             
             # Reconstruction error:
-            error = rmse(vis0Np, lastVisNp)
+            error = mse(vis0Np, lastVisNp)
             # The weights difference
-            diff = rmse(self.sess.run(self.weights),self.sess.run(prevWeights))
+            diff = mse(self.sess.run(self.weights),self.sess.run(prevWeights))
             # Updating the previous weight
             self.sess.run(attPrevWeights) 
            

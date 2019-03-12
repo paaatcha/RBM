@@ -19,11 +19,13 @@ If you find some bug, please e-mail me =)
 import numpy as np
 import sys
 
-# Insert the util's path
-#sys.path.insert (0, '/home/patcha/Dropbox/Doutorado/Codigos/Python/utils/')
-sys.path.insert (0, '/home/labcin/Dropbox/Codigos/Python/utils/')
+# Function to compute the sigmoid
+def sigmoid (v):
+    return 1/(1+np.exp(-v))
 
-from utilsClassification import sigmoid, mse
+# Function to compute the mean square error    
+def mse (x,y):
+    return np.power((x-y),2).mean(axis=1).mean()
 
 class RBM:
     # Atributes
@@ -84,24 +86,23 @@ class RBM:
         return '### RBM ### \n(numVis, numHid) = (%s, %s)\n(nSamples) = (%s)\n(Weights, visBias, hidBias) = (%s, %s, %s)\n RBM type: %s\n# # #' % (self.numVis, \
          self.numHid, self.nSamples, self.weights.shape, self.visBias.shape, self.hidBias.shape, self.rbmType)
         
-        
-    # This method is called when we'd like to train the RBM. If you alredy have the weights,
-    # you just need to pass them as a parameter on the constructor method
-    # Parameters:
-    # maxIter:   # The iteration's max number. Default = 500
     
-    # lr:        # learning rate. Default = 0.001 
-    # wc:        # Weight cost. Default = 0.0002
-    # iMom:      # Initial momentum. Default = 0.5
-    # fMom:      # Final momentum. Default = 0.9
-    # cdIter:    # The CD iterations' number. Default = 1
-    # batchSize: # The mini-batche's size. Default= 100. If it's equal zero, then 
-    #              we use the whole dataset without batches       
-    # Verbose:   # If you'd like to print the training error, set True. Default = False
-    # freqPrint: # This var control the print frequence. Every freqPrint iteration, the
-                 # error will be printed. Default: 10
-    # tol        # The convergence tolerance error for the weights. Default: 10e-5
     def train (self, maxIter=200, lr=0.001, wc=0.0002, iMom=0.5, fMom=0.9, cdIter=1, batchSize=100, verbose=True, freqPrint=10, tol=10e-5):
+	'''
+        This method is called when we'd like to train the RBM. If you alredy have the weights,
+        you just need to pass them as a parameter on the constructor method
+        Input:
+            maxIter: The iteration's max number. Default = 500    
+            lr: learning rate. Default = 0.001 
+            wc: Weight cost. Default = 0.0002
+            iMom: Initial momentum. Default = 0.5
+            fMom: Final momentum. Default = 0.9
+            cdIter: The CD iterations' number. Default = 1
+            batchSize: The mini-batche's size. Default= 100. If it's equal zero, then we use the whole dataset without batches       
+            Verbose: If you'd like to print the training error, set True. Default = False
+            freqPrint: This var control the print frequence. Every freqPrint iteration, the error will be printed. Default: 10
+            tol: The convergence tolerance error for the weights. Default: 10e-5	
+	'''
         print 'Starting the training...'
         # Checkin the batch size. If it's 0, we use the whole dataset
         if batchSize == 0:
@@ -172,7 +173,6 @@ class RBM:
                 dh = dh[np.newaxis,:] # Just ajusting the numpy format     
 
 
-                # TODO: REVER ESSA QUESTÃO DOS FORS
                 deltaWeights = (mom*deltaWeights) + (lr*dw/batchSize) - (wc*self.weights)
                 deltaVisBias = (mom*deltaVisBias) + (lr*dv/batchSize)
                 deltaHidBias = (mom*deltaHidBias) + (lr*dh/batchSize)                    
@@ -238,7 +238,6 @@ class RBM:
         dh = np.sum(probHid0, axis=0) - np.sum(probHid1, axis=0)
         dh = dh[np.newaxis,:] # Just ajusting the numpy format     
 
-        # TODO: REVER ESSA QUESTÃO DOS FORS
         self.deltaWeights = (mom*self.deltaWeights) + (lr*dw/batchSize) - (wc*self.weights)
         self.deltaVisBias = (mom*self.deltaVisBias) + (lr*dv/batchSize)
         self.deltaHidBias = (mom*self.deltaHidBias) + (lr*dh/batchSize)                    
