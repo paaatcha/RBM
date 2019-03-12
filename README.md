@@ -8,5 +8,5 @@ If you find any bug or have any comment, feel free to email me.
 ## Dependencies
 * Python 2.7.x
 * NumPy
+* Tensorflow <= 1.9 (if you wanna use it)
 * Scikit-learn
-* Utils (check my [utils](https://github.com/paaatcha/utils) repository)
